@@ -1,0 +1,11 @@
+name: CardGames
+main: net.punchtree.cardgames.CardGamesPlugin
+version: 1.0
+api-version: 1.16
+depend: [MapManager]
+description: Card Games in Minecraft
+
+commands:
+    cardgames:
+        aliases: cg
+    cardtabletest:

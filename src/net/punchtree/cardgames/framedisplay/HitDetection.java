@@ -2,47 +2,78 @@ package net.punchtree.cardgames.framedisplay;
 
 import java.awt.Point;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 import org.inventivetalent.mapmanager.event.MapInteractEvent;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class HitDetection implements Listener {
 
-	private final String GAME_FRAME_METADATA_KEY = "CARD_GAME_TABLE_FRAME";
+//	private final String GAME_FRAME_METADATA_KEY = "CARD_GAME_TABLE_FRAME";
 	
-	private static Map<UUID, GameFrame> frameMap = new HashMap<>();
+	private static Map<ItemFrame, GameFrame> gameFrameMap = new WeakHashMap<>();
 	
 	// We use a singleton just to prevent registering the event twice (we only want one after all)
 	private HitDetection(){}
 	private static final HitDetection instance = new HitDetection();
 	public static HitDetection getInstance() { return instance; }
+
+	public void registerTableFrame(ItemFrame frame, GameFrame gameFrame) {
+		gameFrameMap.put(frame, gameFrame);
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.getHand() != EquipmentSlot.HAND) return;
+		Bukkit.broadcastMessage(ChatColor.AQUA + event.getPlayer().getName() + " interact");
+	}
 	
 	@EventHandler
 	public void onMapInteract(MapInteractEvent event) {
 		ItemFrame frame = event.getItemFrame();
-		if (!isGameFrame(frame)) return;
+		Player player = event.getPlayer();
+		Bukkit.broadcastMessage(gameFrameMap.size() + " card table frames registered!");
 		
-		Point pointOnMap = getMapPointPlayerIsLookingAt(event.getPlayer());
+		GameFrame gameFrame = gameFrameMap.get(frame);
+		if (gameFrame == null) return;
 		
+		Point pointOnMap = getMapPointPlayerIsLookingAt(player);
+		gameFrame.hit(player, pointOnMap.x, pointOnMap.y, CardInteractionType.CLICK);
 	}
 	
-	private boolean isGameFrame(ItemFrame frame) {
-		return frameMap.containsKey(frame.getUniqueId());
+	@EventHandler
+	public void onEntityInteractEvent(HangingBreakByEntityEvent event) {
+		if (event.getEntity().getType() != EntityType.ITEM_FRAME) return;
+		ItemFrame frame = (ItemFrame) event.getEntity();
+		if (gameFrameMap.containsKey(frame)) {
+			event.setCancelled(true);
+			Point p = getMapPointPlayerIsLookingAt((Player) event.getRemover());
+			Bukkit.broadcastMessage("Cancelled breaking a card table frame! (" + p.getX() + ", " + p.getY() + ")");
+		}
 	}
+	
+//	private boolean isGameFrame(ItemFrame frame) {
+//		return frameMap.containsKey(frame.getUniqueId());
+//	}
 	
 	private static final Set<Material> TRANSPARENT = Arrays.asList(Material.values()).stream().filter(Material::isTransparent).collect(Collectors.toSet());
 	

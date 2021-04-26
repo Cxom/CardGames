@@ -51,24 +51,24 @@ public class CardTableTest implements CommandExecutor {
 		
 		resetBackground();
 		StandardDeck deck = StandardDeck.getNewDeck().shuffle();
-		int baseOffset = 25;
+		int baseOffset = 5;
 		for ( int i = 0; i < 7; ++i ) {
 			StandardCard card = deck.get(i);
 			int xOffset = 9 * i * 2;
 			g.drawImage(card.getSprite(), baseOffset + xOffset, baseOffset, CardSprites.CARD_WIDTH * 2, CardSprites.CARD_HEIGHT * 2, null);
 		}
-//		baseOffset += CardSprites.CARD_HEIGHT + 20;
-//		for ( int i = 0; i < 7; ++i ) {
-//			int xOffset = 9 * i;
-//			g.drawImage(CardSprites.getCardBacking(), baseOffset + xOffset, baseOffset + CardSprites.CARD_HEIGHT + 20, null);
-//		}
+		baseOffset += CardSprites.CARD_HEIGHT * 2 + 1;
+		for ( int i = 0; i < 7; ++i ) {
+			int xOffset = 9 * i;
+			g.drawImage(CardSprites.getCardBacking(), baseOffset + xOffset, baseOffset, null);
+		}
 		
 		MapWrapper mapWrapper = mapManager.wrapImage(image);
 		MapController mapController = mapWrapper.getController();
 		mapController.addViewer(viewer);
 		mapController.sendContent(viewer);
-//		mapController.showInFrame(viewer, frame, true);
-		mapController.showInHand(viewer, true);
+		mapController.showInFrame(viewer, frame, true);
+//		mapController.showInHand(viewer, true);
 	}
 
 	@Override

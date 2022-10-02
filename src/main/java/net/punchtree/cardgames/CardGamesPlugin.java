@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.punchtree.cardgames.prototyping.VanillaMapTesting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,6 +45,7 @@ public class CardGamesPlugin extends JavaPlugin {
 		getCommand("cg").setExecutor(new CardGamesCommandExecutor());
 		getCommand("cardtabletest").setExecutor(new CardTableTest());
 		getCommand("createcardtable").setExecutor(new CreateCardTableCommand());
+		getCommand("vanillamaptesting").setExecutor(new VanillaMapTesting());
 		
 		Bukkit.getPluginManager().registerEvents(HitDetection.getInstance(), this);
 		Bukkit.getPluginManager().registerEvents(new PlayerGameListeners(), this);

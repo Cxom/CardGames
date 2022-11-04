@@ -1,12 +1,11 @@
 package net.punchtree.cardgames.prototyping;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
+import net.punchtree.cardgames.StandardCard;
+import net.punchtree.cardgames.StandardDeck;
+import net.punchtree.cardgames.display.CardSprites;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -14,18 +13,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
-import org.inventivetalent.mapmanager.MapManagerPlugin;
-import org.inventivetalent.mapmanager.controller.MapController;
-import org.inventivetalent.mapmanager.manager.MapManager;
-import org.inventivetalent.mapmanager.wrapper.MapWrapper;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
 
-import net.punchtree.cardgames.StandardCard;
-import net.punchtree.cardgames.StandardDeck;
-import net.punchtree.cardgames.display.CardSprites;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class CardTableTest implements CommandExecutor {
-
-	private static MapManager mapManager = ((MapManagerPlugin) Bukkit.getPluginManager().getPlugin("MapManager")).getMapManager();
 	
 	private static int IMAGE_SIZE = 128;
 	
@@ -62,13 +57,29 @@ public class CardTableTest implements CommandExecutor {
 			int xOffset = 9 * i;
 			g.drawImage(CardSprites.getCardBacking(), baseOffset + xOffset, baseOffset, null);
 		}
-		
-		MapWrapper mapWrapper = mapManager.wrapImage(image);
-		MapController mapController = mapWrapper.getController();
-		mapController.addViewer(viewer);
-		mapController.sendContent(viewer);
-		mapController.showInFrame(viewer, frame, true);
+
+
+		showInFrame(frame, image);
+//		MapWrapper mapWrapper = mapManager.wrapImage(image);
+//		MapController mapController = mapWrapper.getController();
+//		mapController.addViewer(viewer);
+//		mapController.sendContent(viewer);
+//		mapController.showInFrame(viewer, frame, true);
 //		mapController.showInHand(viewer, true);
+	}
+
+	private static void showInFrame(ItemFrame frame, Image image) {
+		ItemStack mapItem = new ItemStack(Material.FILLED_MAP, 1);
+		MapView mapView = Bukkit.createMap(frame.getWorld());
+
+		mapView.removeRenderer(mapView.getRenderers().get(0));
+
+		CustomMapRenderer mapRenderer = new CustomMapRenderer(image);
+		mapView.addRenderer(mapRenderer);
+
+		mapItem.editMeta(mapMeta -> ((MapMeta) mapMeta).setMapView(mapView));
+
+		frame.setItem(mapItem);
 	}
 
 	@Override

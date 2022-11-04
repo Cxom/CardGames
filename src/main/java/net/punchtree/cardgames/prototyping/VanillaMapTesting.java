@@ -22,7 +22,7 @@ public class VanillaMapTesting implements CommandExecutor {
         MapView mapView = Bukkit.createMap(player.getWorld());
 
         mapView.removeRenderer(mapView.getRenderers().get(0));
-        mapView.addRenderer(new CustomMapRenderer());
+        mapView.addRenderer(CustomMapRenderer.fromUrl("https://i.imgur.com/CNGYK7Q.png"));
 
         mapItem.editMeta(mapMeta -> ((MapMeta) mapMeta).setMapView(mapView));
 

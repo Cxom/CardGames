@@ -1,12 +1,5 @@
 package net.punchtree.cardgames.framedisplay;
 
-import java.awt.Point;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,9 +15,13 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
-import org.inventivetalent.mapmanager.event.MapInteractEvent;
 
-import net.md_5.bungee.api.ChatColor;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 
 public class HitDetection implements Listener {
 
@@ -46,19 +43,19 @@ public class HitDetection implements Listener {
 		if (event.getHand() != EquipmentSlot.HAND) return;
 	}
 	
-	@EventHandler
-	public void onMapInteract(MapInteractEvent event) {
-		ItemFrame frame = event.getItemFrame();
-		Player player = event.getPlayer();
-//		Bukkit.broadcastMessage(gameFrameMap.size() + " card table frames registered!");
-		
-		GameFrame gameFrame = gameFrameMap.get(frame);
-		if (gameFrame == null) return;
-		
-		Point pointOnMap = getMapPointPlayerIsLookingAt(player);
-		gameFrame.hit(player, pointOnMap.x, pointOnMap.y, CardInteractionType.CLICK);
-	}
-	
+//	@EventHandler
+//	public void onMapInteract(MapInteractEvent event) {
+//		ItemFrame frame = event.getItemFrame();
+//		Player player = event.getPlayer();
+////		Bukkit.broadcastMessage(gameFrameMap.size() + " card table frames registered!");
+//
+//		GameFrame gameFrame = gameFrameMap.get(frame);
+//		if (gameFrame == null) return;
+//
+//		Point pointOnMap = getMapPointPlayerIsLookingAt(player);
+//		gameFrame.hit(player, pointOnMap.x, pointOnMap.y, CardInteractionType.CLICK);
+//	}
+
 	@EventHandler
 	public void onEntityInteractEvent(HangingBreakByEntityEvent event) {
 		if (event.getEntity().getType() != EntityType.ITEM_FRAME) return;

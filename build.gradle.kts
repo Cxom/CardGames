@@ -22,7 +22,6 @@ dependencies {
     paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.19.2-R0.1-SNAPSHOT")
 
     implementation("net.punchtree:punchtree-util:0.0.1-SNAPSHOT")
-    compileOnly("org.inventivetalent:mapmanager:1.8.8-SNAPSHOT")
     compileOnly("com.bergerkiller.bukkit:BKCommonLib:1.19-v2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")

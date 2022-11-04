@@ -14,17 +14,25 @@ import java.net.URL;
 
 public class CustomMapRenderer extends MapRenderer {
 
-    Image image;
+    private final Image image;
+
+    public CustomMapRenderer(Image image) {
+        this.image = image;
+    }
+
+    public static CustomMapRenderer fromUrl(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            BufferedImage image = ImageIO.read(url);
+            return new CustomMapRenderer(image);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void initialize(MapView map) {
-        try {
-            URL url = new URL("https://i.imgur.com/CNGYK7Q.png");
-            image = ImageIO.read(url);
-        } catch (IOException e) {
-            drawn = true; // prevents rendering a null image
-            throw new RuntimeException(e);
-        }
+
     }
 
     boolean drawn = false;

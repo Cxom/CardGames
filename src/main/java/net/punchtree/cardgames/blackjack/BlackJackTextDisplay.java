@@ -1,8 +1,8 @@
 package net.punchtree.cardgames.blackjack;
 
-import java.util.List;
+import org.bukkit.ChatColor;
 
-import net.md_5.bungee.api.ChatColor;
+import java.util.List;
 
 public class BlackJackTextDisplay {
 
@@ -94,5 +94,12 @@ public class BlackJackTextDisplay {
 	private void sendAll(String message) {
 		game.playersMap.values().forEach(bjp -> bjp.sendMessage(message));
 	}
-	
+
+	void showPlayerQuit(BlackJackPlayer leavingBjp, BlackJackGame blackJackGame) {
+		sendAll(BlackJackGame.PREFIX + ChatColor.RED + leavingBjp.player.getName() + " quit!");
+	}
+
+	void showAlreadyStood(BlackJackPlayer bjp) {
+		bjp.sendMessage(BlackJackGame.PREFIX + ChatColor.RED + "You're already locked in!");
+	}
 }

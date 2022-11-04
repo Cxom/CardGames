@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.punchtree.cardgames.CardGame;
-import net.punchtree.cardgames.CardGamesPlugin;
 import net.punchtree.cardgames.Rank;
 import net.punchtree.cardgames.StandardDeck;
 
@@ -47,7 +46,7 @@ public class BlackJackGame implements CardGame {
 	
 	private void hit(BlackJackPlayer bjp) {
 		if (bjp.isSet()) {
-			bjp.sendMessage(PREFIX + ChatColor.RED + "You're already locked in!");
+			display.showAlreadyStood(bjp);
 		}
 		bjp.hit(deck.pop());
 		
@@ -60,7 +59,7 @@ public class BlackJackGame implements CardGame {
 		}
 		checkForAllLockedIn();
 	}
-	
+
 	private void set(BlackJackPlayer bjp) {
 		bjp.lockIn();
 		display.showPlayerSet(bjp);
@@ -68,14 +67,11 @@ public class BlackJackGame implements CardGame {
 	}
 	
 	private void playerQuit(BlackJackPlayer leavingBjp) {
-		playersMap.values().forEach((bjp) -> {
-			// TODO change prefix to game specific
-			bjp.sendMessage(CardGamesPlugin.CHAT_PREFIX_ERROR + leavingBjp + " quit!");
-		});
+		display.showPlayerQuit(leavingBjp, this);
 		playersMap.remove(leavingBjp.player);
 		shutdown();
 	}
-	
+
 	@Override
 	public void onPlayerChat(Player player, String message) {
 		BlackJackPlayer bjp = playersMap.get(player);
